@@ -1,0 +1,31 @@
+#!/usr/bin/env ruby
+
+$:.unshift File.join(File.dirname(__FILE__), *%w[.. lib])
+
+help = <<HELP
+Bartender is a smart static site generator
+
+Basic Command Line Usage:
+  bartender                                                # . -> ./_site
+  bartender --new [SITE NAME]                              # create a new site by this name
+  
+  Configuration is read from '<source>/_config.yml'
+
+HELP
+
+require 'optparse'
+require 'bartender'
+
+options = {}
+
+opts = OptionParser.new do |opts|
+  opts.on("--new [SITE NAME]", "Create a new site") do |site_name|
+    Bartender::Site.create(site_name)
+  end
+end
+
+opts.parse!
+
+if ARGV.size == 0
+  Bartender::Site.new({})
+end
