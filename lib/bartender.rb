@@ -3,6 +3,7 @@ require "bartender/version"
 require 'rubygems'
 require 'yaml'
 require 'fileutils'
+
 require 'deep_merge'
 
 def require_all(path)

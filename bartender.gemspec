@@ -16,4 +16,5 @@ Gem::Specification.new do |gem|
   gem.require_paths = ["lib"]
   gem.version       = Bartender::VERSION
   gem.add_dependency "deep_merge"
+  gem.add_dependency "tilt"
 end

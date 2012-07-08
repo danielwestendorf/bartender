@@ -14,6 +14,7 @@ module Bartender
         exit 0
       else #no conflicts with the site name, create some shit
         Dir.mkdir(name) #make new site dir
+        Dir.mkdir(File.join(name, Bartender::DEFAULTS["output"]))
         Bartender::DEFAULTS.values_at("layouts", "pages", "assets").each do |dir| #make default directories
           Dir.mkdir(File.join(name, dir))
         end
@@ -21,6 +22,7 @@ module Bartender
         #make asset directories
         ["js", "css", "images"].each do |asset_dir|
           Dir.mkdir(File.join(File.join(name, Bartender::DEFAULTS["assets"]), asset_dir))
+          Dir.mkdir(File.join(File.join(name, Bartender::DEFAULTS["output"]), asset_dir))
         end
 
         #copy over the default files
