@@ -1,6 +1,6 @@
 module Bartender
 
-  class Site
+  module Site
 
     def initialize(config)
       Bartender.configure(config)
@@ -36,6 +36,6 @@ module Bartender
 
     end #Function create
 
-  end #Class Site
+  end #Module Site
 
 end #Module Bartender
