@@ -8,6 +8,7 @@ require 'deep_merge'
 
 require 'bartender/view_helpers'
 require 'bartender/asset'
+require 'bartender/partial'
 require 'bartender/site'
 require 'bartender/page'
 

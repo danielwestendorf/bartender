@@ -5,14 +5,7 @@ module Bartender
       #render a simple partial, use Tilt to render it
       #display an error if the partial isn't found
       def partial(filename, variables={})
-        search_string = File.join(Bartender::DEFAULTS['pages'], '_' + filename + "*")
-        file = Dir.glob(search_string)[0]
-        if file && File.exists?(file)
-          Tilt.new(file).render(variables, variables)
-        else
-          $stderr.puts "ERROR: Could not find partial file '#{filename}' in #{Bartender::DEFAULTS['pages']} for page #{self.page}"
-          exit 0
-        end
+        Bartender::Partial.new(filename, self.sprockets_env, variables)
       end
 
       #link the appropriate stylesheet
@@ -57,6 +50,19 @@ module Bartender
         else
           $stderr.puts "WARNING: Could not find image '#{filename}' in #{Bartender::DEFAULTS['assets']} for page #{self.page}"
           return "<!-- WARNING: Could not link img #{filename} -->"
+        end
+      end #Function link_image
+
+      #provide the path to the asset
+      def asset_url(filename)
+
+        asset = Bartender::Asset.new(filename, self.sprockets_env)
+
+        if asset
+          return asset.site_path
+        else
+          $stderr.puts "WARNING: Could not find asset '#{filename}' in #{Bartender::DEFAULTS['assets']} for page #{self.page}"
+          return "<!-- WARNING: Could not find asset #{filename} -->"
         end
       end #Function link_image
         

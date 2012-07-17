@@ -13,24 +13,33 @@ module Bartender
       compile_assets
 
       Dir.glob(File.join(Bartender::DEFAULTS["pages"], '/**/*')).each do |page|
-        Page.new(page, @sprockets_env).compile unless page.split('/')[-1].match /^_/
+         compile_page(page) unless page.split('/')[-1].match /^_/ #compile the page unless it is a partial
       end
     end #Function initialize
 
+    #compile the page
+    #expects to be passed a path to a tilt template
+    def compile_page(page)
+      Page.new(page, @sprockets_env).compile
+    end #Function compile_page
 
     #compile the css and js assets for use in the page
     #uses sprokets set an environment, compile them, then get accessed
     def compile_assets
       Dir.glob(File.join(Bartender::DEFAULTS["assets"], '/**/*')).each do |asset|
-        asset = Bartender::Asset.new(asset.gsub(File.join(Bartender::DEFAULTS["assets"], '/'), ''), @sprockets_env)
-
-        if asset.found #make sure sprockets can find the asset
-          asset.sprockets_object.write_to(asset.dest_path)
-        end
+        compile_asset(asset)
       end
     end #Function compile_assets
 
+    #compile each asset
+    #expects a file name to be passed to it
+    def compile_asset(asset)
+      asset = Bartender::Asset.new(asset.gsub(File.join(Bartender::DEFAULTS["assets"], '/'), ''), @sprockets_env)
 
+      if asset.found #make sure sprockets can find the asset
+        asset.sprockets_object.write_to(asset.dest_path)
+      end
+    end #Function compile_asset
 
     def self.create(name)
       name = File.join(Bartender::DEFAULTS["root"], name)
