@@ -10,6 +10,7 @@ module Bartender
 
       @sprockets_env = Sprockets::Environment.new
       @sprockets_env.append_path Bartender::DEFAULTS["assets"]
+      add_asset_url
       compile_assets
 
       Dir.glob(File.join(Bartender::DEFAULTS["pages"], '/**/*')).each do |page|
@@ -28,7 +29,7 @@ module Bartender
     def compile_assets
       Dir.glob(File.join(Bartender::DEFAULTS["output"], '/**/*')).each {|asset| File.delete(asset) unless File.directory?(asset)}#delete the old files
       Dir.glob(File.join(Bartender::DEFAULTS["assets"], '/**/*')).each do |asset|
-        compile_asset(asset)
+        compile_asset(asset.gsub(/\..*$/, '')) #remove the extensions, let's let sprockets tell us what the final extension should be
       end
     end #Function compile_assets
 
@@ -70,6 +71,16 @@ module Bartender
       end
 
     end #Function create
+
+    #add the asset_url method so that 
+    def add_asset_url
+      @sprockets_env.context_class.class_eval do
+        def asset_url(filename)
+          asset = Bartender::Asset.new(filename, environment)
+          asset.site_path if asset.found
+        end
+      end
+    end
 
   end #Class Site
 
