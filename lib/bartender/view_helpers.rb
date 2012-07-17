@@ -5,7 +5,7 @@ module Bartender
       #render a simple partial, use Tilt to render it
       #display an error if the partial isn't found
       def partial(filename, variables={})
-        Bartender::Partial.new(filename, self.sprockets_env, variables)
+        Bartender::Partial.new(filename, self.sprockets_env, variables).to_s
       end
 
       #link the appropriate stylesheet
@@ -16,7 +16,7 @@ module Bartender
         asset = Bartender::Asset.new(file_path, self.sprockets_env)
 
         if asset
-          return "<link #{opts.to_a.collect{|opt_a| "#{opt_a[0]}=\"#{opt_a[1]}\""}.join(' ')} src=\"#{asset.site_path}\"/>"
+          return "<link #{opts.to_a.collect{|opt_a| "#{opt_a[0]}=\"#{opt_a[1]}\""}.join(' ')} href=\"#{asset.site_path}\"/>"
         else
           $stderr.puts "WARNING: Could not find stylesheet '#{filename}' in #{Bartender::DEFAULTS['assets']} for page #{self.page}"
           return "<!-- WARNING: Could not link stylesheet #{filename} -->"

@@ -26,6 +26,7 @@ module Bartender
     #compile the css and js assets for use in the page
     #uses sprokets set an environment, compile them, then get accessed
     def compile_assets
+      Dir.glob(File.join(Bartender::DEFAULTS["output"], '/**/*')).each {|asset| File.delete(asset) unless File.directory?(asset)}#delete the old files
       Dir.glob(File.join(Bartender::DEFAULTS["assets"], '/**/*')).each do |asset|
         compile_asset(asset)
       end
