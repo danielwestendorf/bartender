@@ -1,10 +1,35 @@
+require 'sprockets'
+require 'tilt'
 module Bartender
 
-  module Site
+  class Site
 
+    #Load the config, and compile the site
     def initialize(config)
       Bartender.configure(config)
+
+      @sprockets_env = Sprockets::Environment.new
+      @sprockets_env.append_path Bartender::DEFAULTS["assets"]
+      compile_assets
+
+      Dir.glob(File.join(Bartender::DEFAULTS["pages"], '/**/*')).each do |page|
+        Page.new(page, @sprockets_env).compile unless page.split('/')[-1].match /^_/
+      end
     end #Function initialize
+
+
+    #compile the css and js assets for use in the page
+    #uses sprokets set an environment, compile them, then get accessed
+    def compile_assets
+      Dir.glob(File.join(Bartender::DEFAULTS["assets"], '/**/*')).each do |asset|
+        asset = Bartender::Asset.new(asset.gsub(File.join(Bartender::DEFAULTS["assets"], '/'), ''), @sprockets_env)
+
+        if asset.found #make sure sprockets can find the asset
+          asset.sprockets_object.write_to(asset.dest_path)
+        end
+      end
+    end #Function compile_assets
+
 
 
     def self.create(name)
@@ -21,8 +46,8 @@ module Bartender
 
         #make asset directories
         ["js", "css", "images"].each do |asset_dir|
-          Dir.mkdir(File.join(File.join(name, Bartender::DEFAULTS["assets"]), asset_dir))
-          Dir.mkdir(File.join(File.join(name, Bartender::DEFAULTS["output"]), asset_dir))
+          Dir.mkdir(File.join(File.join(name, Bartender::DEFAULTS["assets"]), asset_dir)) #this is where un-comiled assets go
+          Dir.mkdir(File.join(File.join(name, Bartender::DEFAULTS["output"]), asset_dir)) #this is where compiled assets will go
         end
 
         #copy over the default files
@@ -36,6 +61,6 @@ module Bartender
 
     end #Function create
 
-  end #Module Site
+  end #Class Site
 
 end #Module Bartender

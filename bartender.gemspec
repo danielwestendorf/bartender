@@ -17,4 +17,5 @@ Gem::Specification.new do |gem|
   gem.version       = Bartender::VERSION
   gem.add_dependency "deep_merge"
   gem.add_dependency "tilt"
+  gem.add_dependency "sprockets"
 end

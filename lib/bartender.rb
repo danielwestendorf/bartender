@@ -6,14 +6,10 @@ require 'fileutils'
 
 require 'deep_merge'
 
-def require_all(path)
-  glob = File.join(File.dirname(__FILE__), path, '*.rb')
-  Dir[glob].each do |f|
-    require f
-  end
-end
-
-require_all "bartender/"
+require 'bartender/view_helpers'
+require 'bartender/asset'
+require 'bartender/site'
+require 'bartender/page'
 
 module Bartender
   DEFAULTS = {
@@ -24,7 +20,7 @@ module Bartender
     "output"            => "_site",       #where the site content will be saved
     "layouts"           => "layouts",     #folder where layouts are saved
     "pages"             => "pages",       #folder where actual pages are saved
-    "assets"            => "assets",      #folder where assets are saved
+    "assets"            => "assets",      #folder where un-compiled assets should be 
     "excluded_files"    => [],            #files that shouldn't be compiled
 
     #site map options
