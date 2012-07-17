@@ -29,7 +29,8 @@ module Bartender
     def compile_assets
       Dir.glob(File.join(Bartender::DEFAULTS["output"], '/**/*')).each {|asset| File.delete(asset) unless File.directory?(asset)}#delete the old files
       Dir.glob(File.join(Bartender::DEFAULTS["assets"], '/**/*')).each do |asset|
-        compile_asset(asset.gsub(/\..*$/, '')) #remove the extensions, let's let sprockets tell us what the final extension should be
+        asset.gsub!(/\..*$/, '') unless asset.scan("images").length > 0 #remove the extensions, let's let sprockets tell us what the final extension should be
+        compile_asset(asset)
       end
     end #Function compile_assets
 
